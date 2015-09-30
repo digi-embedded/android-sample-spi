@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="CPOL_modes" translatable="false">
+        <item>CPOL = 0</item>
+        <item>CPOL = 1</item>
+    </string-array>
+
+    <string-array name="CPHA_modes" translatable="false">
+        <item>CPHA = 0</item>
+        <item>CPHA = 1</item>
+    </string-array>
+        
+</resources>
