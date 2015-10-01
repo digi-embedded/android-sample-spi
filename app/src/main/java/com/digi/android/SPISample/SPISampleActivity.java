@@ -1,4 +1,4 @@
-package com.example.android.SPISample;
+package com.digi.android.SPISample;
 
 import android.app.Activity;
 import java.io.IOException;
@@ -21,36 +21,40 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 /**
- * This application demonstrates the use of the SPI API by monitoring the communication
- * with a slave device. User is allowed to configure all the SPI parameters (although at the
- * beginning they are all set to their default values):
- *  - Interface and device: all the possibilities are listed so that the user can choose one.
- *    Changing this option during normal operation will reset all the other parameters to the
- *    default values.
- *  - Clock polarity and phase: each of them can be set to 0 or 1 according to SPI standard
- *    definition.
- *  - Special modes ("CS High", "LSB First", "3-wire", "Loop", "No CS" and "Ready"). They are all
- *    individually selectable according to SPI standard definition. They might not be supported.
- *    If that is the case, the mode will be discarded and a message will be shown in the console.
- *  - Bits per word: the size of each transfer word.
- *  - Speed: the maximum transfer speed in Hz.
- *  - Read length: the amount of transfer words to receive during read process.
+ * This application demonstrates the use of the SPI API by monitoring the
+ * communication with a slave device. Users can configure all the SPI parameters
+ * (at the beginning they are all set to their default values):
+ * <ul>
+ * <li>Interface and device: All the possible interface/device combinations are
+ * listed to choose one. Changing this option during normal operation resets all
+ * the other parameters to their default values.</li>
+ * <li>Clock polarity and phase: Each of them can be set to 0 or 1 according to
+ * SPI standard definition.</li>
+ * <li>Special modes ("CS High", "LSB First", "3-wire", "Loop", "No CS" and
+ * "Ready"): They are all individually selectable according to SPI standard
+ * definition. They might not be supported. If that is the case, the mode is
+ * discarded and the console displays a message.</li>
+ * <li>Bits per word: The size of each transfer word.</li>
+ * <li>Speed: The maximum transfer speed in Hz.</li>
+ * <li>Read length: The amount of transfer words to receive during read process.</li>
+ *</ul>
  *
- * The application shows two fields named "Data to send" and "Received data" that correspond to
- * data to be sent to the slave device and data received from it, respectively. Three buttons take
- * control of this operations:
- *  - "Read data" button: Reads from the slave device the amount of words specified by the "Read
- *    length" parameter and shows them in the "Received data" field. If no data has been read,
- *    nothing will be shown in this field. In case of error, a message will be shown in the console.
- *  - "Transfer data" button: Writes in the slave device the data introduced in the "Data to send"
- *    field while, at the same time, reads from the slave device data with the same length as the
- *    written data. If no data has been read, nothing will be shown in the "Received data" field.
- *    In case of error, a message will be shown in the console.
- *  - "Write data" button: Writes in the slave device the data introduced in the "Data to send"
- *    field. In case of error, a message will be shown in the console.
- *
+ * <p>The application shows two fields named "Data to send" and "Received data"
+ * that correspond to data to send to the slave device and data received from
+ * it, respectively. Three buttons take control of these operations:</p>
+ * <ul>
+ * <li>"Read data" button: Reads from the slave device the amount of words
+ * specified by the _Read length_ parameter and shows them in the "Received
+ * data" field. If no data has been read, this field is empty. In case of error,
+ * the console displays a message.</li>
+ * <li>"Transfer data" button: Writes in the slave device the data introduced in
+ * the "Data to send" field while, at the same time, reads from the slave device
+ * data with the same length as the written data. If no data has been read,
+ * this field is empty. In case of error, the console displays a message.</li>
+ * <li>"Write data" button: Writes in the slave device the data introduced in
+ * the "Data to send" field. In case of error, the console displays a message.</li>
+ * </ul>
  */
-
 public class SPISampleActivity extends Activity implements OnClickListener, OnCheckedChangeListener, OnItemSelectedListener {
 	private static final String TAG = "SPISample";
 
