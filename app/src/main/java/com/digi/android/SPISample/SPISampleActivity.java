@@ -1,3 +1,15 @@
+/**
+ * Copyright (c) 2014-2015 Digi International Inc.,
+ * All rights not expressly granted are reserved.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * Digi International Inc. 11001 Bren Road East, Minnetonka, MN 55343
+ * =======================================================================
+ */
+
 package com.digi.android.SPISample;
 
 import android.app.Activity;
@@ -58,18 +70,17 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 public class SPISampleActivity extends Activity implements OnClickListener, OnCheckedChangeListener, OnItemSelectedListener {
 	private static final String TAG = "SPISample";
 
-	private int DEFAULT_MODE = 0;           // Default mode: 0
-	private int DEFAULT_WORD_SIZE = 8;      // Default word size: 8 bits per word
-	private int DEFAULT_MAX_SPEED = 500000; // Default maximum speed: 500 KHz
-	private int DEFAULT_READ_LENGTH = 10;	// Default number of bytes to read: 10.
-	private String SEND_DATA_HINT = "Enter data to be sent...";
+	private final int DEFAULT_MODE = 0;           // Default mode: 0
+	private final int DEFAULT_WORD_SIZE = 8;      // Default word size: 8 bits per word
+	private final int DEFAULT_MAX_SPEED = 500000; // Default maximum speed: 500 KHz
+	private final int DEFAULT_READ_LENGTH = 10;	  // Default number of bytes to read: 10.
+	private final String SEND_DATA_HINT = "Enter data to be sent...";
 	
 	private int mInterface = -1;
 	private int mDevice = -1;
 	private Spinner interfaceSelector, clkpol, clkpha;
 	private CheckBox cshigh, lsbfirst, threewire, loop, nocs, ready;
 	private EditText wordsize, maxspeed, readlength, sendData, receiveData;
-	private Button readButton, transferButton, writeButton;
 	private SPI mSPI;
 	private boolean openedSPI = false;
 	
@@ -95,9 +106,9 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
         wordsize = (EditText)findViewById(R.id.word_size);
         maxspeed = (EditText)findViewById(R.id.max_speed);
         readlength = (EditText)findViewById(R.id.read_length);
-        readButton = (Button)findViewById(R.id.read_button);
-        transferButton = (Button)findViewById(R.id.transfer_button);
-        writeButton = (Button)findViewById(R.id.write_button);
+		Button readButton = (Button)findViewById(R.id.read_button);
+		Button transferButton = (Button)findViewById(R.id.transfer_button);
+		Button writeButton = (Button)findViewById(R.id.write_button);
         sendData = (EditText)findViewById(R.id.send_data);
         receiveData = (EditText)findViewById(R.id.receive_data);
 
@@ -111,9 +122,9 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
         }
         
         // Show initial values
-        wordsize.setText(Integer.toString(currentWordSize));
-        maxspeed.setText(Integer.toString(currentMaxSpeed));
-        readlength.setText(Integer.toString(currentReadLength));
+        wordsize.setText(String.valueOf(currentWordSize));
+        maxspeed.setText(String.valueOf(currentMaxSpeed));
+        readlength.setText(String.valueOf(currentReadLength));
         sendData.setHint(SEND_DATA_HINT);
         receiveData.setEnabled(false);
 
@@ -163,9 +174,9 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
                 
     }
 
-	public void OnDestroy() {
+	/*public void OnDestroy() {
 		super.onDestroy();
-	}
+	}*/
 
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -337,8 +348,8 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
 		currentMode = DEFAULT_MODE;
 		currentWordSize = DEFAULT_WORD_SIZE;
 		currentMaxSpeed = DEFAULT_MAX_SPEED;
-        wordsize.setText(Integer.toString(currentWordSize));
-        maxspeed.setText(Integer.toString(currentMaxSpeed));
+		wordsize.setText(String.valueOf(currentWordSize));
+        maxspeed.setText(String.valueOf(currentMaxSpeed));
         sendData.setText("");
         sendData.setHint(SEND_DATA_HINT);
         receiveData.setText("");

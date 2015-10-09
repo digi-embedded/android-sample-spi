@@ -11,8 +11,7 @@ Demo requirements
 To run this example you need:
 
 * One compatible device to host the application.
-* Network connection between the device and the host PC in order to transfer and
-  launch the application.
+* A USB connection between the device and the host PC in order to transfer and launch the application.
 * Establish remote target connection to your Digi hardware before running this
   application.
 * An external SPI device is required to run this example. Another possibility is
@@ -25,8 +24,7 @@ Demo setup
 Make sure the hardware is set up correctly:
 
 * The device is powered on.
-* The device is connected directly to the PC or to the Local Area Network (LAN)
-  by the Ethernet cable.
+* The device is connected directly to the PC by the micro USB cable.
 * If RX and TX lines of the Development Board SPI socket are not shorted, an
   external SPI slave address must be connected to this socket.
 	   
@@ -67,8 +65,8 @@ from it, respectively. Three buttons take control of these operations:
 * **Write data** button: Writes in the slave device the data introduced in the
   _Data to send_ field. In case of error, the console displays a message.
 
-Tested on
----------
+Compatible with
+---------------
 
 * ConnectCore Wi-i.MX51
 * ConnectCore Wi-i.MX53
