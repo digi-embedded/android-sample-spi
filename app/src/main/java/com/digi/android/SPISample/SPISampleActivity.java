@@ -33,49 +33,27 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 /**
- * This application demonstrates the use of the SPI API by monitoring the
- * communication with a slave device. Users can configure all the SPI parameters
- * (at the beginning they are all set to their default values):
- * <ul>
- * <li>Interface and device: All the possible interface/device combinations are
- * listed to choose one. Changing this option during normal operation resets all
- * the other parameters to their default values.</li>
- * <li>Clock polarity and phase: Each of them can be set to 0 or 1 according to
- * SPI standard definition.</li>
- * <li>Special modes ("CS High", "LSB First", "3-wire", "Loop", "No CS" and
- * "Ready"): They are all individually selectable according to SPI standard
- * definition. They might not be supported. If that is the case, the mode is
- * discarded and the console displays a message.</li>
- * <li>Bits per word: The size of each transfer word.</li>
- * <li>Speed: The maximum transfer speed in Hz.</li>
- * <li>Read length: The amount of transfer words to receive during read process.</li>
- *</ul>
+ * SPI sample application.
  *
- * <p>The application shows two fields named "Data to send" and "Received data"
- * that correspond to data to send to the slave device and data received from
- * it, respectively. Three buttons take control of these operations:</p>
- * <ul>
- * <li>"Read data" button: Reads from the slave device the amount of words
- * specified by the _Read length_ parameter and shows them in the "Received
- * data" field. If no data has been read, this field is empty. In case of error,
- * the console displays a message.</li>
- * <li>"Transfer data" button: Writes in the slave device the data introduced in
- * the "Data to send" field while, at the same time, reads from the slave device
- * data with the same length as the written data. If no data has been read,
- * this field is empty. In case of error, the console displays a message.</li>
- * <li>"Write data" button: Writes in the slave device the data introduced in
- * the "Data to send" field. In case of error, the console displays a message.</li>
- * </ul>
+ * <p>This example demonstrates the usage of the SPI API by monitoring the
+ * communication with a slave device. The application allows reading, writing and
+ * transferring data to the slave device.</p>
+ *
+ * <p>For a complete description on the example, refer to the 'README.md' file
+ * included in the example directory.</p>
  */
 public class SPISampleActivity extends Activity implements OnClickListener, OnCheckedChangeListener, OnItemSelectedListener {
+
+	// Constants.
 	private static final String TAG = "SPISample";
 
-	private final int DEFAULT_MODE = 0;           // Default mode: 0
-	private final int DEFAULT_WORD_SIZE = 8;      // Default word size: 8 bits per word
-	private final int DEFAULT_MAX_SPEED = 500000; // Default maximum speed: 500 KHz
-	private final int DEFAULT_READ_LENGTH = 10;	  // Default number of bytes to read: 10.
+	private final int DEFAULT_MODE = 0;				// Default mode: 0
+	private final int DEFAULT_WORD_SIZE = 8;		// Default word size: 8 bits per word
+	private final int DEFAULT_MAX_SPEED = 500000;	// Default maximum speed: 500 KHz
+	private final int DEFAULT_READ_LENGTH = 10;		// Default number of bytes to read: 10.
 	private final String SEND_DATA_HINT = "Enter data to be sent...";
-	
+
+	// Variables.
 	private int mInterface = -1;
 	private int mDevice = -1;
 	private Spinner interfaceSelector, clkpol, clkpha;
@@ -83,64 +61,68 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
 	private EditText wordsize, maxspeed, readlength, sendData, receiveData;
 	private SPI mSPI;
 	private boolean openedSPI = false;
-	
+
 	private int currentMode = DEFAULT_MODE;
 	private int currentWordSize = DEFAULT_WORD_SIZE;
 	private int currentMaxSpeed = DEFAULT_MAX_SPEED;
 	private int currentReadLength = DEFAULT_READ_LENGTH;
 
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        
-        // Instance the elements from layout
-        interfaceSelector = (Spinner)findViewById(R.id.interface_selector);
-        clkpol = (Spinner)findViewById(R.id.CPOL_selector);
-        clkpha = (Spinner)findViewById(R.id.CPHA_selector);
-        cshigh = (CheckBox)findViewById(R.id.CS_HIGH);
-        lsbfirst = (CheckBox)findViewById(R.id.LSB_FIRST);
-        threewire = (CheckBox)findViewById(R.id.THREE_WIRE);
-        loop = (CheckBox)findViewById(R.id.LOOP);
-        nocs = (CheckBox)findViewById(R.id.NO_CS);
-        ready = (CheckBox)findViewById(R.id.READY);
-        wordsize = (EditText)findViewById(R.id.word_size);
-        maxspeed = (EditText)findViewById(R.id.max_speed);
-        readlength = (EditText)findViewById(R.id.read_length);
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+
+		// Instance the elements from layout.
+		interfaceSelector = (Spinner)findViewById(R.id.interface_selector);
+		clkpol = (Spinner)findViewById(R.id.CPOL_selector);
+		clkpha = (Spinner)findViewById(R.id.CPHA_selector);
+		cshigh = (CheckBox)findViewById(R.id.CS_HIGH);
+		lsbfirst = (CheckBox)findViewById(R.id.LSB_FIRST);
+		threewire = (CheckBox)findViewById(R.id.THREE_WIRE);
+		loop = (CheckBox)findViewById(R.id.LOOP);
+		nocs = (CheckBox)findViewById(R.id.NO_CS);
+		ready = (CheckBox)findViewById(R.id.READY);
+		wordsize = (EditText)findViewById(R.id.word_size);
+		maxspeed = (EditText)findViewById(R.id.max_speed);
+		readlength = (EditText)findViewById(R.id.read_length);
 		Button readButton = (Button)findViewById(R.id.read_button);
 		Button transferButton = (Button)findViewById(R.id.transfer_button);
 		Button writeButton = (Button)findViewById(R.id.write_button);
-        sendData = (EditText)findViewById(R.id.send_data);
-        receiveData = (EditText)findViewById(R.id.receive_data);
+		sendData = (EditText)findViewById(R.id.send_data);
+		receiveData = (EditText)findViewById(R.id.receive_data);
 
-        // Show the available interfaces in the spinner
-        String[] interfaces = SPI.listInterfaces();
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, interfaces);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        interfaceSelector.setAdapter(adapter);
-        if (interfaceSelector.getItemAtPosition(0) != null) {
-        	interfaceSelector.setSelection(0);
-        }
-        
-        // Show initial values
-        wordsize.setText(String.valueOf(currentWordSize));
-        maxspeed.setText(String.valueOf(currentMaxSpeed));
-        readlength.setText(String.valueOf(currentReadLength));
-        sendData.setHint(SEND_DATA_HINT);
-        receiveData.setEnabled(false);
+		// Show the available interfaces in the spinner.
+		String[] interfaces = SPI.listInterfaces();
+		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, interfaces);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		interfaceSelector.setAdapter(adapter);
+		if (interfaceSelector.getItemAtPosition(0) != null) {
+			interfaceSelector.setSelection(0);
+		}
+		
+		// Show initial values.
+		wordsize.setText(String.valueOf(currentWordSize));
+		maxspeed.setText(String.valueOf(currentMaxSpeed));
+		readlength.setText(String.valueOf(currentReadLength));
+		sendData.setHint(SEND_DATA_HINT);
+		receiveData.setEnabled(false);
 
-        // Set event listeners
-        interfaceSelector.setOnItemSelectedListener(this);
-        clkpol.setOnItemSelectedListener(this);
-        clkpha.setOnItemSelectedListener(this);
-        cshigh.setOnCheckedChangeListener(this);
-        lsbfirst.setOnCheckedChangeListener(this);
-        threewire.setOnCheckedChangeListener(this);
-        loop.setOnCheckedChangeListener(this);
-        nocs.setOnCheckedChangeListener(this);
-        ready.setOnCheckedChangeListener(this);
-        wordsize.addTextChangedListener(new TextWatcher() {
+		// Set event listeners.
+		interfaceSelector.setOnItemSelectedListener(this);
+		clkpol.setOnItemSelectedListener(this);
+		clkpha.setOnItemSelectedListener(this);
+		cshigh.setOnCheckedChangeListener(this);
+		lsbfirst.setOnCheckedChangeListener(this);
+		threewire.setOnCheckedChangeListener(this);
+		loop.setOnCheckedChangeListener(this);
+		nocs.setOnCheckedChangeListener(this);
+		ready.setOnCheckedChangeListener(this);
+		wordsize.addTextChangedListener(new TextWatcher() {
+			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {}
-			public void beforeTextChanged(CharSequence s, int start, int count,	int after) {}
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+			@Override
 			public void afterTextChanged(Editable s) {
 				if (wordsize.getText().length() == 0)
 					return;
@@ -148,9 +130,12 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
 				Log.v(TAG, "Word size has changed to " + currentWordSize);
 			}
 		});
-        maxspeed.addTextChangedListener(new TextWatcher() {
+		maxspeed.addTextChangedListener(new TextWatcher() {
+			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {}
-			public void beforeTextChanged(CharSequence s, int start, int count,	int after) {}
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+			@Override
 			public void afterTextChanged(Editable s) {
 				if (maxspeed.getText().length() == 0)
 					return;
@@ -158,9 +143,12 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
 				Log.v(TAG, "Maximum speed has changed to " + currentMaxSpeed);
 			}
 		});
-        readlength.addTextChangedListener(new TextWatcher() {
+		readlength.addTextChangedListener(new TextWatcher() {
+			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+			@Override
 			public void afterTextChanged(Editable s) {
 				if (readlength.getText().length() == 0)
 					return;
@@ -168,54 +156,51 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
 				Log.v(TAG, "Read length has changed to " + currentReadLength);
 			}
 		});
-        readButton.setOnClickListener(this);
-        transferButton.setOnClickListener(this);
-        writeButton.setOnClickListener(this);
-                
-    }
+		readButton.setOnClickListener(this);
+		transferButton.setOnClickListener(this);
+		writeButton.setOnClickListener(this);
+	}
 
-	/*public void OnDestroy() {
-		super.onDestroy();
-	}*/
-
+	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.read_button:
-			readData();		
-			break;
-		case R.id.transfer_button:
-			transferData();
-			break;
-		case R.id.write_button:
-			writeData();
-			break;
+			case R.id.read_button:
+				readData();
+				break;
+			case R.id.transfer_button:
+				transferData();
+				break;
+			case R.id.write_button:
+				writeData();
+				break;
 		}
 	}
 
+	@Override
 	public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
 		int newMode = currentMode;
 		switch (parent.getId()) {
-		case R.id.interface_selector:
-			updateInterface();	
-			cleanOptions();
-			break;
-		case R.id.CPOL_selector:
+			case R.id.interface_selector:
+				updateInterface();
+				cleanOptions();
+				break;
+			case R.id.CPOL_selector:
 				if (pos == 0) {
 					newMode = currentMode & Integer.parseInt("11111110", 2);
 				} 
 				if (pos == 1) {
-					newMode = currentMode | Integer.parseInt("00000001", 2);					
+					newMode = currentMode | Integer.parseInt("00000001", 2);
 				} 
 				try {
 					if (mSPI.setMode(newMode) == 0) {
 						currentMode = newMode;
-						Log.v(TAG, "Clock polarization has changed: new mode is " + currentMode);						
+						Log.v(TAG, "Clock polarization has changed: new mode is " + currentMode);
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			break;
-		case R.id.CPHA_selector:
+				break;
+			case R.id.CPHA_selector:
 				if (pos == 0) {
 					newMode = currentMode & Integer.parseInt("11111101", 2);
 				} 
@@ -225,75 +210,77 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
 				try {
 					if (mSPI.setMode(newMode) == 0) {
 						currentMode = newMode;
-						Log.v(TAG, "Clock phase has changed: new mode is " + currentMode);						
+						Log.v(TAG, "Clock phase has changed: new mode is " + currentMode);
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			break;		
+				break;
 		}
 	}
 
+	@Override
 	public void onNothingSelected(AdapterView<?> arg0) {
 	}
 
+	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		int newMode = currentMode;
 		switch (buttonView.getId()) {
-		case R.id.CS_HIGH:
-			if (isChecked) {
-				newMode = currentMode | Integer.parseInt("00000100", 2);
-			} else {
-				newMode = currentMode & Integer.parseInt("11111011", 2);
-			}
-			Log.v(TAG, "CS HIGH has changed.");
-			break;
-		case R.id.LSB_FIRST:
-			if (isChecked) {
-				newMode = currentMode | Integer.parseInt("00001000", 2);
-			} else {
-				newMode = currentMode & Integer.parseInt("11110111", 2);
-			}
-			Log.v(TAG, "LSB FIRST has changed.");			
-			break;
-		case R.id.THREE_WIRE:		
-			if (isChecked) {
-				newMode = currentMode | Integer.parseInt("00010000", 2);
-			} else {
-				newMode = currentMode & Integer.parseInt("11101111", 2);
-			}
-			Log.v(TAG, "3-WIRE has changed.");
-			break;
-		case R.id.LOOP:			
-			if (isChecked) {
-				newMode = currentMode | Integer.parseInt("00100000", 2);
-			} else {
-				newMode = currentMode & Integer.parseInt("11011111", 2);
-			}
-			Log.v(TAG, "LOOP has changed.");
-			break;
-		case R.id.NO_CS:
-			if (isChecked) {
-				newMode = currentMode | Integer.parseInt("01000000", 2);
-			} else {
-				newMode = currentMode & Integer.parseInt("10111111", 2);
-			}
-			Log.v(TAG, "NO CS has changed.");
-			break;
-		case R.id.READY:		
-			if (isChecked) {
-				newMode = currentMode | Integer.parseInt("10000000", 2);
-			} else {
-				newMode = currentMode & Integer.parseInt("01111111", 2);
-			}
-			Log.v(TAG, "READY has changed.");
-			break;			
+			case R.id.CS_HIGH:
+				if (isChecked) {
+					newMode = currentMode | Integer.parseInt("00000100", 2);
+				} else {
+					newMode = currentMode & Integer.parseInt("11111011", 2);
+				}
+				Log.v(TAG, "CS HIGH has changed.");
+				break;
+			case R.id.LSB_FIRST:
+				if (isChecked) {
+					newMode = currentMode | Integer.parseInt("00001000", 2);
+				} else {
+					newMode = currentMode & Integer.parseInt("11110111", 2);
+				}
+				Log.v(TAG, "LSB FIRST has changed.");
+				break;
+			case R.id.THREE_WIRE:
+				if (isChecked) {
+					newMode = currentMode | Integer.parseInt("00010000", 2);
+				} else {
+					newMode = currentMode & Integer.parseInt("11101111", 2);
+				}
+				Log.v(TAG, "3-WIRE has changed.");
+				break;
+			case R.id.LOOP:
+				if (isChecked) {
+					newMode = currentMode | Integer.parseInt("00100000", 2);
+				} else {
+					newMode = currentMode & Integer.parseInt("11011111", 2);
+				}
+				Log.v(TAG, "LOOP has changed.");
+				break;
+			case R.id.NO_CS:
+				if (isChecked) {
+					newMode = currentMode | Integer.parseInt("01000000", 2);
+				} else {
+					newMode = currentMode & Integer.parseInt("10111111", 2);
+				}
+				Log.v(TAG, "NO CS has changed.");
+				break;
+			case R.id.READY:
+				if (isChecked) {
+					newMode = currentMode | Integer.parseInt("10000000", 2);
+				} else {
+					newMode = currentMode & Integer.parseInt("01111111", 2);
+				}
+				Log.v(TAG, "READY has changed.");
+				break;
 		}
 
 		try {
 			if (mSPI.setMode(newMode) == 0) {
 				currentMode = newMode;
-				Log.v(TAG, "New mode is " + currentMode);				
+				Log.v(TAG, "New mode is " + currentMode);
 			} else {
 				Log.v(TAG, "Error setting new mode: keeping previous mode.");
 				Toast toast = Toast.makeText(getApplicationContext(), "Mode not supported in the current interface.", Toast.LENGTH_LONG);
@@ -305,20 +292,20 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
 		}
 	}
 	
-	private void updateInterface() {	
-		// Recognize the new interface
+	private void updateInterface() {
+		// Recognize the new interface.
 		String selectedInterface = interfaceSelector.getSelectedItem().toString();
 		Log.v(TAG, "Selected interface is " + selectedInterface);
 		int newInterface = Integer.valueOf(selectedInterface.substring(0, 5));
 		int newDevice = Integer.valueOf(selectedInterface.substring(6));
 		
-		// Close the old interface if necessary
+		// Close the old interface if necessary.
 		if ( openedSPI && (newInterface != mInterface) && (newDevice != mInterface) ) {
 			mSPI.close();
 			Log.v(TAG, "Closed SPI configuration: interface = " + mInterface + " & device = " + mDevice);
 		}
 
-		// Create a new object for the new interface and open it
+		// Create a new object for the new interface and open it.
 		if ( (newInterface != mInterface) && (newDevice != mDevice) ) {
 			mInterface = newInterface;
 			mDevice = newDevice;
@@ -329,14 +316,14 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
 				Log.v(TAG, "New SPI configuration: interface " + mInterface + " & device = " + mDevice);
 			} catch (IOException e) {
 				e.printStackTrace();
-			}			
+			}
 		} else {
 			Log.v(TAG, "Selected SPI interface is already opened.");
 		}
 	}
 	
 	private void cleanOptions() {
-		// Sets all options to default after changing the interface
+		// Sets all options to default after changing the interface.
 		clkpol.setSelection(0);
 		clkpha.setSelection(0);
 		cshigh.setChecked(false);
@@ -349,11 +336,11 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
 		currentWordSize = DEFAULT_WORD_SIZE;
 		currentMaxSpeed = DEFAULT_MAX_SPEED;
 		wordsize.setText(String.valueOf(currentWordSize));
-        maxspeed.setText(String.valueOf(currentMaxSpeed));
-        sendData.setText("");
-        sendData.setHint(SEND_DATA_HINT);
-        receiveData.setText("");
-        Log.v(TAG, "Application restored to default values.");
+		maxspeed.setText(String.valueOf(currentMaxSpeed));
+		sendData.setText("");
+		sendData.setHint(SEND_DATA_HINT);
+		receiveData.setText("");
+		Log.v(TAG, "Application restored to default values.");
 	}
 	
 	private void readData() {

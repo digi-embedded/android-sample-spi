@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">SPISample</string>
+    <string name="app_name">SPI Sample</string>
 
     <color name="black">#666666</color>
     <color name="white">#FFFFFF</color>
