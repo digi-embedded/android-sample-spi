@@ -10,7 +10,7 @@
  * =======================================================================
  */
 
-package com.digi.android.SPISample;
+package com.digi.android.spi;
 
 import android.app.Activity;
 import java.io.IOException;

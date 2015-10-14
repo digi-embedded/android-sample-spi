@@ -4,7 +4,7 @@ android {
     compileSdkVersion 19
     buildToolsVersion '19.1.0'
     defaultConfig {
-        applicationId 'com.digi.android.SPISample'
+        applicationId 'com.digi.android.spi'
         minSdkVersion 19
         targetSdkVersion 19
     }

@@ -1,243 +1,267 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:baselineAligned="true"
-	android:orientation="horizontal" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="true"
+    android:orientation="horizontal">
 
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:layout_weight="2"
-		android:orientation="vertical" 
-		android:layout_marginTop="10dip"
-		android:layout_marginStart="10dip"
-		android:background="@drawable/border" >
-		
-		<TableLayout
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-   	 		android:stretchColumns="1">
-   	 		<TableRow>
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="@string/select_interface"
-					android:layout_gravity="center_vertical"
-					android:layout_marginStart="5dip"
-					android:textColor="@color/white"
-					android:textSize="16sp" />
-				<Spinner
-					android:id="@+id/interface_selector"
-					android:layout_marginStart="7dip"
-					android:prompt="@string/select_interface_title"/>
-			</TableRow>
-	   </TableLayout>
-	   
-	   <TableLayout
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center" >
-			<TableRow >
-				<Spinner
-					android:id="@+id/CPOL_selector"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:prompt="@string/select_CPOL" 
-					android:entries="@array/CPOL_modes"/>
-				<Spinner
-					android:id="@+id/CPHA_selector"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:prompt="@string/select_CPHA" 
-					android:entries="@array/CPHA_modes" />
-			</TableRow>
-		</TableLayout>
-		
-		<TableLayout
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" 
-			android:layout_gravity="center">
-			<TableRow >
-				<CheckBox 
-					android:id="@+id/CS_HIGH"
-					android:text="@string/CS_HIGH_text" />
-				<CheckBox 
-					android:id="@+id/LSB_FIRST" 
-					android:text="@string/LSB_FIRST_text"/>
-				<CheckBox
-					android:id="@+id/THREE_WIRE" 
-					android:text="@string/THREE_WIRE_text"/>
-			</TableRow>
-			<TableRow >
-				<CheckBox 
-					android:id="@+id/LOOP"
-					android:text="@string/LOOP_text" />
-				<CheckBox 
-					android:id="@+id/NO_CS" 
-					android:text="@string/NO_CS_text"/>
-				<CheckBox 
-					android:id="@+id/READY" 
-					android:text="@string/READY_text"/>
-			</TableRow> 
-		</TableLayout>
-			
-		<TableLayout 
-   			android:layout_width="fill_parent"
-			android:layout_height="wrap_content" >
-			<TableRow >
-				<TextView 
-					android:layout_width="wrap_content" 
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="10dip"
-					android:layout_marginRight="10dip"
-					android:text="@string/select_word_size" 
-					android:textColor="@color/white"
-					android:layout_weight="1"
-					android:textSize="16sp"
-					android:labelFor="@+id/word_size"/>
-				<TextView 
-					android:layout_width="wrap_content" 
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="10dip"
-					android:layout_marginRight="10dip"
-					android:text="@string/select_speed" 
-					android:textColor="@color/white"
-					android:layout_weight="3"
-					android:textSize="16sp"
-					android:labelFor="@+id/max_speed"/>
-				<TextView 
-					android:layout_width="wrap_content" 
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="10dip"
-					android:layout_marginRight="10dip"
-					android:text="@string/select_length" 
-					android:textColor="@color/white"
-					android:layout_weight="2"
-					android:textSize="16sp"
-					android:labelFor="@+id/read_length"/>
-				</TableRow>
-			<TableRow >
-				<EditText 
-					android:id="@+id/word_size" 
-					android:layout_marginLeft="10dip"
-					android:layout_marginRight="10dip"
-					android:maxLength="2"
-					android:layout_weight="1"
-					android:inputType="number"/>
-				<EditText 
-					android:id="@+id/max_speed" 
-					android:layout_marginLeft="10dip"
-					android:layout_marginRight="10dip"
-					android:layout_weight="3" 
-					android:inputType="number" />
-				<EditText 
-					android:id="@+id/read_length" 
-					android:layout_marginLeft="10dip"
-					android:layout_marginRight="10dip"
-					android:layout_weight="2" 
-					android:inputType="number" />
-			</TableRow>
-		</TableLayout>
-		
-		<Button 
-			android:id="@+id/read_button"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="15dip"
-			android:layout_marginLeft="20dip"
-			android:layout_marginRight="20dip"
-			android:text="@string/read_button" /> 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="2"
+        android:background="@drawable/border"
+        android:orientation="vertical">
 
-		<Button 
-			android:id="@+id/transfer_button"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="20dip"
-			android:layout_marginRight="20dip"
-			android:text="@string/transfer_button" /> 
-		
-		<Button 
-			android:id="@+id/write_button"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="20dip"
-			android:layout_marginRight="20dip"
-			android:text="@string/write_button" />
-		
-	</LinearLayout>
-		
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:layout_marginLeft="10dip"
-		android:layout_marginRight="10dip"
-		android:gravity="center"
-		android:layout_weight="2"
-		android:orientation="vertical" >
-		
-		<TextView 
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="10dip"
-			android:layout_marginTop="10dip"
-			android:text="@string/send_message"
-			android:textColor="@color/white" 
-			android:textSize="16sp"
-			android:labelFor="@+id/send_data"/>
-		<EditText 
-			android:id="@+id/send_data"
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:paddingRight="10dip"
-			android:paddingLeft="10dip"
-			android:layout_weight="2"
-			android:paddingBottom="10dip"
-			android:inputType="textMultiLine"/>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="1">
 
-		<TextView 
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="10dip"
-			android:layout_marginTop="10dip"
-			android:text="@string/receive_message"
-			android:textColor="@color/white" 
-			android:textSize="16sp"
-			android:labelFor="@+id/receive_data"/>
-		<EditText 
-			android:id="@+id/receive_data"
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:paddingRight="10dip"
-			android:paddingLeft="10dip"
-			android:layout_weight="2"
-			android:paddingBottom="10dip"
-			android:inputType="textMultiLine"/>
-		
-		<LinearLayout
-			android:orientation="horizontal" 
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-			
-			<ImageView 
-				android:layout_width="40dip"
-				android:layout_height="40dip"
-				android:layout_marginBottom="10dip"
-				android:layout_marginTop="10dip"
-				android:layout_marginEnd="7dip"
-				android:src="@drawable/caution" />
-			
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginBottom="10dip"
-				android:layout_marginTop="10dip"
-				android:text="@string/warning_message"
-				android:textColor="@color/white"
-				android:textSize="10sp"
-				android:background="@drawable/border"/>
-		</LinearLayout>
-		
-	</LinearLayout>
+            <TableRow>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/select_interface"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/interface_selector"
+                    android:layout_marginStart="7dp"
+                    android:prompt="@string/select_interface_title" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <TableRow>
+
+                <Spinner
+                    android:id="@+id/CPOL_selector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/CPOL_modes"
+                    android:prompt="@string/select_CPOL" />
+
+                <Spinner
+                    android:id="@+id/CPHA_selector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/CPHA_modes"
+                    android:prompt="@string/select_CPHA" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <TableRow>
+
+                <CheckBox
+                    android:id="@+id/CS_HIGH"
+                    android:text="@string/CS_HIGH_text" />
+
+                <CheckBox
+                    android:id="@+id/LSB_FIRST"
+                    android:text="@string/LSB_FIRST_text" />
+
+                <CheckBox
+                    android:id="@+id/THREE_WIRE"
+                    android:text="@string/THREE_WIRE_text" />
+            </TableRow>
+
+            <TableRow>
+
+                <CheckBox
+                    android:id="@+id/LOOP"
+                    android:text="@string/LOOP_text" />
+
+                <CheckBox
+                    android:id="@+id/NO_CS"
+                    android:text="@string/NO_CS_text" />
+
+                <CheckBox
+                    android:id="@+id/READY"
+                    android:text="@string/READY_text" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:labelFor="@+id/word_size"
+                    android:text="@string/select_word_size"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="3"
+                    android:labelFor="@+id/max_speed"
+                    android:text="@string/select_speed"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="2"
+                    android:labelFor="@+id/read_length"
+                    android:text="@string/select_length"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <EditText
+                    android:id="@+id/word_size"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:maxLength="2" />
+
+                <EditText
+                    android:id="@+id/max_speed"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="3"
+                    android:inputType="number" />
+
+                <EditText
+                    android:id="@+id/read_length"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="2"
+                    android:inputType="number" />
+            </TableRow>
+        </TableLayout>
+
+        <Button
+            android:id="@+id/read_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/read_button" />
+
+        <Button
+            android:id="@+id/transfer_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="@string/transfer_button" />
+
+        <Button
+            android:id="@+id/write_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="@string/write_button" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:labelFor="@+id/send_data"
+            android:text="@string/send_message"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/send_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:inputType="textMultiLine"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:labelFor="@+id/receive_data"
+            android:text="@string/receive_message"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/receive_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:inputType="textMultiLine"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/caution" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:text="@string/warning_message"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>
