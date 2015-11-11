@@ -11,9 +11,8 @@ Demo requirements
 To run this example you need:
 
 * One compatible device to host the application.
-* A USB connection between the device and the host PC in order to transfer and launch the application.
-* Establish remote target connection to your Digi hardware before running this
-  application.
+* A USB connection between the device and the host PC in order to transfer and launch
+  the application.
 * An external SPI device is required to run this example. Another possibility is
   to short RX and TX lines of the SPI socket so what is written in the SPI
   interface (TX line) is read (RX line).
@@ -27,7 +26,7 @@ Make sure the hardware is set up correctly:
 * The device is connected directly to the PC by the micro USB cable.
 * If RX and TX lines of the Development Board SPI socket are not shorted, an
   external SPI slave address must be connected to this socket.
-	   
+
 Demo run
 --------
 
@@ -68,15 +67,11 @@ from it, respectively. Three buttons take control of these operations:
 Compatible with
 ---------------
 
-* ConnectCore Wi-i.MX51
-* ConnectCore Wi-i.MX53
-* ConnectCore 6 Adapter Board
 * ConnectCore 6 SBC
-* ConnectCore 6 SBC v2
 * ConnectCore 6 SBC v2
 
 License
----------
+-------
 
 This software is open-source software. Copyright Digi International, 2014-2015.
 
