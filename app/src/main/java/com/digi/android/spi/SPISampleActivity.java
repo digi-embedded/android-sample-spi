@@ -14,11 +14,15 @@ package com.digi.android.spi;
 
 import android.app.Activity;
 import java.io.IOException;
+
+import android.content.Context;
 import android.os.Bundle;
 import android.spi.SPI;
+import android.spi.SPIManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.NoSuchInterfaceException;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -59,8 +63,9 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
 	private Spinner interfaceSelector, clkpol, clkpha;
 	private CheckBox cshigh, lsbfirst, threewire, loop, nocs, ready;
 	private EditText wordsize, maxspeed, readlength, sendData, receiveData;
+	private SPIManager spiManager;
 	private SPI mSPI;
-	private boolean openedSPI = false;
+	private boolean isSPIopen = false;
 
 	private int currentMode = DEFAULT_MODE;
 	private int currentWordSize = DEFAULT_WORD_SIZE;
@@ -72,7 +77,10 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		// Instance the elements from layout.
+		// Get the SPI manager.
+		spiManager = (SPIManager) getSystemService(Context.SPI_SERVICE);
+
+		// Instantiate the elements from layout.
 		interfaceSelector = (Spinner)findViewById(R.id.interface_selector);
 		clkpol = (Spinner)findViewById(R.id.CPOL_selector);
 		clkpha = (Spinner)findViewById(R.id.CPHA_selector);
@@ -92,8 +100,8 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
 		receiveData = (EditText)findViewById(R.id.receive_data);
 
 		// Show the available interfaces in the spinner.
-		String[] interfaces = SPI.listInterfaces();
-		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, interfaces);
+		String[] interfaces = spiManager.listInterfaces();
+		final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, interfaces);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		interfaceSelector.setAdapter(adapter);
 		if (interfaceSelector.getItemAtPosition(0) != null) {
@@ -192,10 +200,9 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
 					newMode = currentMode | Integer.parseInt("00000001", 2);
 				} 
 				try {
-					if (mSPI.setMode(newMode) == 0) {
-						currentMode = newMode;
-						Log.v(TAG, "Clock polarization has changed: new mode is " + currentMode);
-					}
+					mSPI.setMode(newMode);
+					currentMode = newMode;
+					Log.v(TAG, "Clock polarization has changed: new mode is " + currentMode);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -208,10 +215,9 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
 					newMode = currentMode | Integer.parseInt("00000010", 2);
 				}
 				try {
-					if (mSPI.setMode(newMode) == 0) {
-						currentMode = newMode;
-						Log.v(TAG, "Clock phase has changed: new mode is " + currentMode);
-					}
+					mSPI.setMode(newMode);
+					currentMode = newMode;
+					Log.v(TAG, "Clock phase has changed: new mode is " + currentMode);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -278,17 +284,15 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
 		}
 
 		try {
-			if (mSPI.setMode(newMode) == 0) {
-				currentMode = newMode;
-				Log.v(TAG, "New mode is " + currentMode);
-			} else {
-				Log.v(TAG, "Error setting new mode: keeping previous mode.");
-				Toast toast = Toast.makeText(getApplicationContext(), "Mode not supported in the current interface.", Toast.LENGTH_LONG);
-				toast.show();
-				buttonView.setChecked(false);
-			}
+			mSPI.setMode(newMode);
+			currentMode = newMode;
+			Log.v(TAG, "New mode is " + currentMode);
 		} catch (IOException e) {
 			e.printStackTrace();
+			Log.v(TAG, "Error setting new mode: keeping previous mode.");
+			Toast toast = Toast.makeText(getApplicationContext(), "Mode not supported in the current interface.", Toast.LENGTH_LONG);
+			toast.show();
+			buttonView.setChecked(false);
 		}
 	}
 	
@@ -296,29 +300,34 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
 		// Recognize the new interface.
 		String selectedInterface = interfaceSelector.getSelectedItem().toString();
 		Log.v(TAG, "Selected interface is " + selectedInterface);
-		int newInterface = Integer.valueOf(selectedInterface.substring(0, 5));
-		int newDevice = Integer.valueOf(selectedInterface.substring(6));
+		int newInterface = Integer.valueOf(selectedInterface.split("\\.")[0]);
+		int newDevice = Integer.valueOf(selectedInterface.split("\\.")[1]);
 		
 		// Close the old interface if necessary.
-		if ( openedSPI && (newInterface != mInterface) && (newDevice != mInterface) ) {
-			mSPI.close();
-			Log.v(TAG, "Closed SPI configuration: interface = " + mInterface + " & device = " + mDevice);
-		}
-
-		// Create a new object for the new interface and open it.
-		if ( (newInterface != mInterface) && (newDevice != mDevice) ) {
-			mInterface = newInterface;
-			mDevice = newDevice;
-			mSPI = new SPI(mInterface, mDevice);
+		if (isSPIopen && (newInterface != mInterface) && (newDevice != mInterface)) {
 			try {
-				mSPI.open(DEFAULT_MODE, DEFAULT_WORD_SIZE, DEFAULT_MAX_SPEED);
-				openedSPI = true;
-				Log.v(TAG, "New SPI configuration: interface " + mInterface + " & device = " + mDevice);
+				mSPI.close();
+				Log.v(TAG, "Closed SPI configuration: interface = " + mInterface + " & device = " + mDevice);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+
+		// Create a new object for the new interface and open it.
+		if ((newInterface != mInterface) && (newDevice != mDevice)) {
+			mInterface = newInterface;
+			mDevice = newDevice;
+			mSPI = spiManager.createSPI(mInterface, mDevice);
+			try {
+				mSPI.open(DEFAULT_MODE, DEFAULT_WORD_SIZE, DEFAULT_MAX_SPEED);
+				isSPIopen = true;
+				Log.v(TAG, "New SPI configuration: interface " + mInterface + " & device = " + mDevice);
+			} catch (IOException  |NoSuchInterfaceException e) {
+				Toast.makeText(this, "Error opening interface: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+				e.printStackTrace();
+			}
 		} else {
-			Log.v(TAG, "Selected SPI interface is already opened.");
+			Log.v(TAG, "Selected SPI interface is already open.");
 		}
 	}
 	
@@ -345,32 +354,30 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
 	
 	private void readData() {
 		try {
-			byte[] rx_data = mSPI.read(currentReadLength);
+			byte[] rxData = mSPI.read(currentReadLength);
 			Log.v(TAG, "Data received correctly: " + currentReadLength + " bytes.");
-			String str_rx_data = new String(rx_data);
-			receiveData.setText(str_rx_data);
+			receiveData.setText(new String(rxData));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void transferData() {
-		byte[] rx_data;
-		byte[] tx_data = sendData.getText().toString().getBytes();
+		byte[] rxData;
+		byte[] txData = sendData.getText().toString().getBytes();
 		try {
-			rx_data = mSPI.transfer(tx_data, currentMaxSpeed, currentWordSize);
+			rxData = mSPI.transfer(txData, currentMaxSpeed, currentWordSize);
 			Log.v(TAG, "Data transferred correctly.");
-			String str_rx_data = new String(rx_data);
-			receiveData.setText(str_rx_data);
+			receiveData.setText(new String(rxData));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void writeData() {
-		byte[] tx_data = sendData.getText().toString().getBytes();
+		byte[] txData = sendData.getText().toString().getBytes();
 		try {
-			mSPI.write(tx_data);
+			mSPI.write(txData);
 			Log.v(TAG, "Data sent correctly.");
 		} catch (IOException e) {
 			e.printStackTrace();
