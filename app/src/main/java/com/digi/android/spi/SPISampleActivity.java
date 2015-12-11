@@ -78,7 +78,7 @@ public class SPISampleActivity extends Activity implements OnClickListener, OnCh
 		setContentView(R.layout.main);
 
 		// Get the SPI manager.
-		spiManager = (SPIManager) getSystemService(Context.SPI_SERVICE);
+		spiManager = (SPIManager) getSystemService(SPI_SERVICE);
 
 		// Instantiate the elements from layout.
 		interfaceSelector = (Spinner)findViewById(R.id.interface_selector);
