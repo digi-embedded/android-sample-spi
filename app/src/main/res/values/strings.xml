@@ -6,19 +6,15 @@
     <color name="black">#666666</color>
     <color name="white">#FFFFFF</color>
     
-    <string name="select_interface">Select SPI interface</string>
-    <string name="select_interface_title">Select SPI interface</string>
-    <string name="select_CPOL">Select clock polarity</string>
-    <string name="select_CPHA">Select clock phase</string>
-    <string name="CS_HIGH_text">CS HIGH</string>
-    <string name="LOOP_text">LOOP</string>
-    <string name="LSB_FIRST_text">LSB FIRST</string>
-    <string name="NO_CS_text">NO CS</string>
-    <string name="THREE_WIRE_text">3-WIRE</string>
-    <string name="READY_text">READY</string>
-    <string name="select_word_size">Bits per word</string>
-    <string name="select_speed">Speed (Hz)</string>
+    <string name="select_interface">SPI interface</string>
+    <string name="select_clock_mode">Clock mode</string>
+    <string name="select_chip_select">Chip select</string>
+    <string name="select_bit_order">Bit order</string>
+    <string name="select_word_length">Word length</string>
+    <string name="select_speed">Clock frequency (Hz)</string>
     <string name="select_length">Read length</string>
+    <string name="open_interface">Open interface</string>
+    <string name="close_interface">Close interface</string>
     <string name="read_button">READ DATA</string>
     <string name="transfer_button">TRANSFER DATA</string>
     <string name="write_button">WRITE DATA</string>
