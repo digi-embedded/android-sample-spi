@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.digi.android.spi"
+    package="com.digi.android.sample.spi"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -10,7 +10,9 @@
         android:icon="@drawable/digi_icon"
         android:label="@string/app_name"
         android:allowBackup="true">
-        <activity android:name="com.digi.android.spi.SPISampleActivity"
+        <uses-library android:name="com.digi.android"
+            android:required="true"/>
+        <activity android:name="com.digi.android.sample.spi.SPISampleActivity"
                   android:label="@string/app_name" 
                   android:screenOrientation="landscape"
                   android:configChanges="keyboardHidden|orientation">

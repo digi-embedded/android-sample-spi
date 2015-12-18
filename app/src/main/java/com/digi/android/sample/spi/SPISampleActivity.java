@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-2015 Digi International Inc.,
+ * Copyright (c) 2014-2016 Digi International Inc.,
  * All rights not expressly granted are reserved.
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -10,20 +10,13 @@
  * =======================================================================
  */
 
-package com.digi.android.spi;
+package com.digi.android.sample.spi;
 
 import android.app.Activity;
 import java.io.IOException;
 
 import android.os.Bundle;
-import android.spi.SPI;
-import android.spi.SPIBitOrder;
-import android.spi.SPIChipSelect;
-import android.spi.SPIClockMode;
-import android.spi.SPIConfig;
-import android.spi.SPIManager;
 import android.util.Log;
-import android.util.NoSuchInterfaceExceptionImpl;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -32,6 +25,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.digi.android.spi.SPI;
+import com.digi.android.spi.SPIBitOrder;
+import com.digi.android.spi.SPIChipSelect;
+import com.digi.android.spi.SPIClockMode;
+import com.digi.android.spi.SPIConfig;
+import com.digi.android.spi.SPIManager;
+import com.digi.android.util.NoSuchInterfaceException;
 
 /**
  * SPI sample application.
@@ -68,7 +69,7 @@ public class SPISampleActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.main);
 
 		// Get the SPI manager.
-		spiManager = (SPIManager) getSystemService(SPI_SERVICE);
+		spiManager = new SPIManager(this);
 
 		// Instantiate the elements from layout.
 		interfaceSelector = (Spinner)findViewById(R.id.interface_selector);
@@ -169,7 +170,8 @@ public class SPISampleActivity extends Activity implements OnClickListener {
 			wordLength.setEnabled(false);
 			clockFrequency.setEnabled(false);
 			readLength.setEnabled(false);
-		} catch (NoSuchInterfaceExceptionImpl | IOException e) {
+		//} catch (NoSuchInterfaceExceptionImpl | IOException e) {
+		} catch (NoSuchInterfaceException | IOException e) {
 			Toast.makeText(this, "Error opening interface: " + e.getMessage(), Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
 		}
