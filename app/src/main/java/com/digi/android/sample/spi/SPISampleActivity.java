@@ -170,7 +170,6 @@ public class SPISampleActivity extends Activity implements OnClickListener {
 			wordLength.setEnabled(false);
 			clockFrequency.setEnabled(false);
 			readLength.setEnabled(false);
-		//} catch (NoSuchInterfaceExceptionImpl | IOException e) {
 		} catch (NoSuchInterfaceException | IOException e) {
 			Toast.makeText(this, "Error opening interface: " + e.getMessage(), Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
