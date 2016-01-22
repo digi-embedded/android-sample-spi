@@ -18,6 +18,7 @@ package com.digi.android.sample.spi;
 
 import android.app.Activity;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -92,8 +93,16 @@ public class SPISampleActivity extends Activity implements OnClickListener {
 		receiveData = (EditText)findViewById(R.id.receive_data);
 
 		// Show the available interfaces in the spinner.
-		String[] interfaces = spiManager.listInterfaces();
-		interfaceSelector.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, interfaces));
+		ArrayList<String> interfaces = new ArrayList<String>();
+		int[] nInterfaces = spiManager.listInterfaces();
+		for (int i = 0; i < nInterfaces.length; i++) {
+			int[] devices = spiManager.listSlaveDevices(nInterfaces[i]);
+			for (int j = 0; j < devices.length; j++)
+				interfaces.add(String.format("%d.%d", nInterfaces[i], devices[j]));
+		}
+
+		interfaceSelector.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
+				interfaces.toArray(new String[interfaces.size()])));
 		if (interfaceSelector.getItemAtPosition(0) != null) {
 			interfaceSelector.setSelection(0);
 		}
