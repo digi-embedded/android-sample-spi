@@ -14,8 +14,8 @@ To run this example you need:
 * A USB connection between the device and the host PC in order to transfer and launch
   the application.
 * An external SPI device is required to run this example. Another possibility is
-  to short RX and TX lines of the SPI socket so what is written in the SPI
-  interface (TX line) is read (RX line).
+  to short MISO and MOSI lines of the SPI interface so what is written in the SPI
+  interface (MOSI line) is read (MISO line).
 
 Demo setup
 ----------
@@ -24,8 +24,8 @@ Make sure the hardware is set up correctly:
 
 * The device is powered on.
 * The device is connected directly to the PC by the micro USB cable.
-* If RX and TX lines of the Development Board SPI socket are not shorted, an
-  external SPI slave address must be connected to this socket.
+* If MISO and MOSI lines of the SPI interface are not shorted, an external SPI 
+  device must be connected to this interface.
 
 Demo run
 --------
@@ -36,17 +36,18 @@ launch the project.
 Once application starts, configure all the SPI parameters (at the beginning
 they are all set to their default values):
 
-* **Interface and device**: All the possible interface/device combinations are
+* **SPI interface**: All the possible interface and device combinations are
   listed to choose one. Changing this option during normal operation resets all
   the other parameters to their default values.
 * **Clock polarity and phase**: Each of them can be set to `0` or `1` according
   to SPI standard definition.
-* **Special modes** (_CS High_, _LSB First_, _3-wire_, _Loop_, _No CS_, and
-  _Ready_): They are all individually selectable according to SPI standard
-  definition. They might not be supported. If that is the case, the mode is
-  discarded and the console displays a message.
-* **Bits per word**: The size of each transfer word.
-* **Speed**: The maximum transfer speed in Hz.
+* **Chip select**: Select the behaviour of the Chip select pin (or SS Slave Select)
+  They are all individually selectable according to SPI standard definition. They 
+  might not be supported. If that is the case, the mode is discarded and the 
+  console displays a message.
+* **Bit order**: The order in which the bits are transmitted and received.
+* **Word length**: The size of each transfer word. Possible values are 7, 8 or 16.
+* **Clock frequency**: The maximum transfer speed in Hz.
 * **Read length**: The amount of transfer words to receive during read process.
 
 The application shows two fields named **Data to send** and **Received data**
