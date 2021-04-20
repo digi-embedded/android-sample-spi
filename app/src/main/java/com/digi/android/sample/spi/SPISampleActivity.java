@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2014-2016, Digi International Inc. <support@digi.com>
+/*
+ * Copyright (c) 2014-2021, Digi International Inc. <support@digi.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -19,6 +19,7 @@ package com.digi.android.sample.spi;
 import android.app.Activity;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -77,32 +78,32 @@ public class SPISampleActivity extends Activity implements OnClickListener {
 		spiManager = new SPIManager(this);
 
 		// Instantiate the elements from layout.
-		interfaceSelector = (Spinner)findViewById(R.id.interface_selector);
-		clockMode = (Spinner)findViewById(R.id.clock_mode);
-		chipSelect = (Spinner)findViewById(R.id.chip_select);
-		bitOrder = (Spinner)findViewById(R.id.bit_order);
-		wordLength = (EditText)findViewById(R.id.word_length);
-		clockFrequency = (EditText)findViewById(R.id.clock_frequency);
-		readLength = (EditText)findViewById(R.id.read_length);
-		openButton = (Button)findViewById(R.id.open_button);
-		closeButton = (Button)findViewById(R.id.close_button);
-		readButton = (Button)findViewById(R.id.read_button);
-		transferButton = (Button)findViewById(R.id.transfer_button);
-		writeButton = (Button)findViewById(R.id.write_button);
-		sendData = (EditText)findViewById(R.id.send_data);
-		receiveData = (EditText)findViewById(R.id.receive_data);
+		interfaceSelector = findViewById(R.id.interface_selector);
+		clockMode = findViewById(R.id.clock_mode);
+		chipSelect = findViewById(R.id.chip_select);
+		bitOrder = findViewById(R.id.bit_order);
+		wordLength = findViewById(R.id.word_length);
+		clockFrequency = findViewById(R.id.clock_frequency);
+		readLength = findViewById(R.id.read_length);
+		openButton = findViewById(R.id.open_button);
+		closeButton = findViewById(R.id.close_button);
+		readButton = findViewById(R.id.read_button);
+		transferButton = findViewById(R.id.transfer_button);
+		writeButton = findViewById(R.id.write_button);
+		sendData = findViewById(R.id.send_data);
+		receiveData = findViewById(R.id.receive_data);
 
 		// Show the available interfaces in the spinner.
-		ArrayList<String> interfaces = new ArrayList<String>();
+		ArrayList<String> interfaces = new ArrayList<>();
 		int[] nInterfaces = spiManager.listInterfaces();
-		for (int i = 0; i < nInterfaces.length; i++) {
-			int[] devices = spiManager.listSlaveDevices(nInterfaces[i]);
-			for (int j = 0; j < devices.length; j++)
-				interfaces.add(String.format("%d.%d", nInterfaces[i], devices[j]));
+		for (int nInterface : nInterfaces) {
+			int[] devices = spiManager.listSlaveDevices(nInterface);
+			for (int device : devices)
+				interfaces.add(String.format(Locale.getDefault(), "%d.%d", nInterface, device));
 		}
 
 		interfaceSelector.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
-				interfaces.toArray(new String[interfaces.size()])));
+				interfaces.toArray(new String[0])));
 		if (interfaceSelector.getItemAtPosition(0) != null) {
 			interfaceSelector.setSelection(0);
 		}
@@ -136,22 +137,17 @@ public class SPISampleActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()) {
-			case R.id.open_button:
-				openInterface();
-				break;
-			case R.id.close_button:
-				closeInterface();
-				break;
-			case R.id.read_button:
-				readData();
-				break;
-			case R.id.transfer_button:
-				transferData();
-				break;
-			case R.id.write_button:
-				writeData();
-				break;
+		int id = v.getId();
+		if (id == R.id.open_button) {
+			openInterface();
+		} else if (id == R.id.close_button) {
+			closeInterface();
+		} else if (id == R.id.read_button) {
+			readData();
+		} else if (id == R.id.transfer_button) {
+			transferData();
+		} else if (id == R.id.write_button) {
+			writeData();
 		}
 	}
 
@@ -159,8 +155,8 @@ public class SPISampleActivity extends Activity implements OnClickListener {
 		try {
 			// Recognize the new interface.
 			String selectedInterface = interfaceSelector.getSelectedItem().toString();
-			int newInterface = Integer.valueOf(selectedInterface.split("\\.")[0]);
-			int newDevice = Integer.valueOf(selectedInterface.split("\\.")[1]);
+			int newInterface = Integer.parseInt(selectedInterface.split("\\.")[0]);
+			int newDevice = Integer.parseInt(selectedInterface.split("\\.")[1]);
 
 			// Close the old interface if necessary.
 			if (mSPI != null && mSPI.isInterfaceOpen())
@@ -210,7 +206,7 @@ public class SPISampleActivity extends Activity implements OnClickListener {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void readData() {
 		try {
 			byte[] rxData = mSPI.read(Integer.parseInt(readLength.getText().toString()));
