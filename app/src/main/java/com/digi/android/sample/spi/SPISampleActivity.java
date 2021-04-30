@@ -104,7 +104,7 @@ public class SPISampleActivity extends Activity implements OnClickListener {
 
 		interfaceSelector.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
 				interfaces.toArray(new String[0])));
-		if (interfaceSelector.getItemAtPosition(0) != null) {
+		if (!interfaces.isEmpty() && interfaceSelector.getItemAtPosition(0) != null) {
 			interfaceSelector.setSelection(0);
 		}
 
